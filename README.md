@@ -14,12 +14,12 @@ and on Linux your file needed to end in .scala rather than .sh or without an ext
 
 Since I never had contributed to Open Source, was a novice at GitHub, and intermediate
 level in Scala, why not contribute to sbt? What could go wrong? Actually, both [Eugene
-Yokota] (https://github.com/eed3si9n) and [Dale Wijnand] (https://github.com/dwijnand) were
+Yokota](https://github.com/eed3si9n) and [Dale Wijnand](https://github.com/dwijnand) were
 super helpful and I was able to get everything running and debugging locally and I 
 did my first Pull Request (PR) before Scala Days 2016 last year. Eugene was kind 
 enough to help me get my PR ready for merging at the conference and shortly after that 
 the support for sbt scripting for Windows was supported using .bat files and Unix/Linux 
 added support for .sh or no extension. See the release notes: 
-[https://github.com/sbt/sbt/releases/v0.13.12] During this development I found that 
+(https://github.com/sbt/sbt/releases/v0.13.12). During this development I found that 
 quoted arguments were not passed correctly to scripts but this would have to wait 
 for another PR.
