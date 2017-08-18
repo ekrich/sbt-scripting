@@ -6,5 +6,4 @@ object HelloWorld {
   	println("Hello, world! " + args.mkString(","))
   }
 }
-//HelloWorld.main(args)
 
