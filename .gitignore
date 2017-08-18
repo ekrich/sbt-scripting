@@ -5,3 +5,4 @@
 # sbt
 /target/
 /project/target/
+/bin/
