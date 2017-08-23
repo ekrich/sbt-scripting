@@ -1,3 +1,4 @@
+::#!
 @echo off
 call sbt -Dsbt.version=0.13.16 -Dsbt.main.class=sbt.ScriptMain -error %~nx0 %*
 goto :eof

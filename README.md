@@ -113,7 +113,7 @@ In this case we pass the version and main class as `-D` properties and the `-err
 	scalaVersion := "2.12.3"
 	*/
 	```
-	* In this case the most important portion is the `scalaVersion`. The **sbt** version was passed above and the Scala version is set in the build. This is a simple build but you could have a more complicated build inside the comments.
+	In this case the most important portion is the `scalaVersion`. The **sbt** version was passed above and the Scala version is set in the build. This is a simple build but you could have a more complicated build inside the comments.
 
 3. The last portion is your Scala code you wish to run. 
 	
@@ -124,15 +124,24 @@ In this case we pass the version and main class as `-D` properties and the `-err
 	The scripts are simple but they can be as complex as you need. The references section includes a link to a script that gives you the idea that the script can be a very complicated application.
 	
 ##### Script Restrictions
-Script file names may not have spaces in the file name or embedded periods except for the file extension. The periods get interpreted later downstream as a package name. 
+Script file names **may not** have spaces in the file name or embedded periods except for the file extension. The periods get interpreted later downstream as a package name which will cause an error. 
 	
 ##### Unix Script Tidbits
 Unix or Linux script files name can have no extension or `.sh` which are the normal conventions for sh and bash scripts. The file should be made executable via `chmod u+x <filename>` so it can be executed by the filename. If the script is not on the path you must execute the file as `./path/to/script.sh` as shown in the command line examples. Prior to the change **sbt** scripts only ran on Unix and they had to be named with a `.scala` extension. Now, any file extension or none is valid for Unix scripts so it is backward compatible.
 
 ##### Windows Script Details
-There are some details
+Windows scripts must end in `.cmd` or `.bat`. Batch files, `.bat`, can be executed with or without the extension. If executed without an extension the script must pass the file name with the extension to **sbt**. In order to make sure this happens we use the following symbol for the filename argument `%~nx0` and pass that to **sbt** first and then pass the additional arguments via `%*`. The filename is the first argument or argument `0`. Please refer to file [hellosbt.bat](https://github.com/ekrich/sbt-scripting/blob/master/bin/hellosbt.bat). The top portion of the script looks as follows:
 
-Next we will look at how
+```
+::#!
+@echo off
+call sbt -Dsbt.version=0.13.16 -Dsbt.main.class=sbt.ScriptMain -error %~nx0 %*
+goto :eof
+::!#
+```
+
+### Slighty more advanced examples
+
 	
 
 
@@ -141,24 +150,24 @@ Next we will look at how
 
 Default logLevel in sbt is as follows: `logLevel in Global := Level.Warn`
 
-There is a sbt script entry point that allows sbt to read an embedded build file from the script and then execute any script that follows.
-
- 
-Script file names may not have spaces in the file name or embedded periods except for the file extension. The periods get interpreted later downstream as a package name. Unix or Linux script files name can have no extension or `.sh` which are the normal conventions for sh and bash scripts. The file should be made executable via `chmod u+x <filename>` so it can be executed by the filename. Prior to the change I made sbt scripts only ran on Unix and they had to be named with a `.scala` extension. Now, any file extension or none is valid for Unix scripts so it is backward compatible.
-
-Windows scripts must end in `.cmd` or in `.bat`. Batch files, can be executed with or without the extension. If executed without an extension the script must pass the full file name with the extension to sbt. In order to make sure this happens we use the following symbol for the file name argument `%~nx0` and pass that to sbt first and then pass the additional arguments via `%*`.
-
 
 ## References
 1. Blog about sbt scripting. [http://eed3si9n.com/scripting-with-scala](http://eed3si9n.com/scripting-with-scala) 
 2. Gist example. [https://gist.github.com/SethTisue/3a5a04e5054fc5b75011](https://gist.github.com/SethTisue/3a5a04e5054fc5b75011)
 
-## Appendix: Ammonite
+## Appendix 1: Ammonite
 
 Ammonite is an alternative to **sbt** scripting. My rationale for **sbt** scripting is that most people are using **sbt** already and it needs to be installed to do development. It also will download the needed Scala version so you only need Java installed. I prefer having as few tools as possible but Ammonite is a great tool so try it out if you wish.
 
 1. Ammonite web site. [http://ammonite.io/](http://ammonite.io/)
 2. Ammonite code on GitHub. [https://github.com/lihaoyi/Ammonite](https://github.com/lihaoyi/Ammonite)
+
+## Appendix 2: Script support code details
+
+Scripting support was added with a relatively minor change. The script gets copied after stripping off the extension and adding `.scala` to the filename. This allows the extensions to vary but still ends up the same as before so the `.scala` file can be compiled. The first large step was to acually figuring out how to develop and debug **sbt** locally. The second was actually finding where and how to fix the problem and also understanding how things work enough to make the change.
+
+[Commit Details](https://github.com/sbt/sbt/commit/74510bc0a924c69008cb5ae01f43707c6373eb36).
+
 
 
 
