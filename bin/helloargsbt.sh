@@ -7,8 +7,7 @@ scalaVersion := "2.12.3"
 //logLevel in Global := Level.Debug
 libraryDependencies += "org.example" %% "sbt-scripting-lib" % "1.0"
 */
+
 import org.example._
 
-println("Hello, " + args.headOption.getOrElse("World") + "!")
-println(args.toList)
 Args.main(args)

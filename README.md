@@ -56,7 +56,8 @@ exec scala "$0" "$@"
 !#
 object HelloWorld {
   def main(args: Array[String]): Unit = {
-  	println("Hello, world! " + args.mkString(","))
+  	println("Hello, " + args.headOption.getOrElse("World") + "!")
+    println("Args: " + args.toList)
   }
 }
 ```
@@ -68,12 +69,15 @@ Here is the example for Windows. Refer to `bin/hellarg.bat` or [here](https://gi
 call scala %~nx0 %*
 goto :eof
 ::!#
-object HelloWorld extends App {
-  println("Hello, world! " + args.mkString(","))
+object HelloWorld {
+  def main(args: Array[String]): Unit = {
+  	println("Hello, " + args.headOption.getOrElse("World") + "!")
+    println("Args: " + args.toList)
+  }
 }
 ```
 
-Scala Scripts allow much of the same functionality as sbt scripts but you do not get the power of sbt and dependency management. This means that when you go to update/upgrade your script you must download the dependent jars and then package them with your script.
+Scala Scripts allow much of the same functionality as **sbt** scripts but you do not get the power of **sbt** and dependency management. This means that when you go to update/upgrade your script you must download the dependent jars and then package them with your script.
 
 ### Prerequisite for sbt Scripts
 
@@ -81,7 +85,7 @@ The first thing you should do is download and install the latest **sbt** `1.0.x`
 
 ### Basics of sbt scripts
 
-We will first look at the structure and parts of an sbt script. The first part of the script is the part that tells the native operating system what to execute. We will first show the Unix version but the structure is the same for Windows scripts. We will first look at the file [hellosbt.sh](https://github.com/ekrich/sbt-scripting/blob/master/bin/hellosbt.sh). If we are in the root of the project we can execute the following command with your own arguments as desired.
+We will first look at the structure and parts of an **sbt** script. The first part of the script is the part that tells the native operating system what to execute. We will first show the Unix version but the structure is the same for Windows scripts. We will first look at the file [hellosbt.sh](https://github.com/ekrich/sbt-scripting/blob/master/bin/hellosbt.sh). If we are in the root of the project we can execute the following command with your own arguments as desired.
 
 ```
 $ ./bin/hellosbt.sh "Eric R" foo bar baz
@@ -121,7 +125,7 @@ In this case we pass the version and main class as `-D` properties and the `-err
 	println("Hello, " + args.headOption.getOrElse("World") + "!")
 	println("Args: " + args.toList)
 	```
-	The scripts are simple but they can be as complex as you need. The references section includes a link to a script that gives you the idea that the script can be a very complicated application.
+	The scripts are simple but they can be as complex as you need. The references section includes a link to a script (Gist) that gives you the idea that the script can be a very complicated application.
 	
 ##### Script Restrictions
 Script file names **may not** have spaces in the file name or embedded periods except for the file extension. The periods get interpreted later downstream as a package name which will cause an error. 
@@ -142,13 +146,76 @@ goto :eof
 
 ### Slighty more advanced examples
 
-	
+The next example is meant to show how you might create the code you want to run in another project and then use it in a script by using a *libraryDependencies* setting in your **sbt** script file. A couple of reason you may want to do this are as follows:
 
+* Your script application targets both Unix and Windows platforms and you want your *sbt* to share the same code so you don't have to change code in multiple places. In this case you would still have change the *sbt* version, *scalaVersion* and/or your *libraryDependencies* in the build file. This is the case we demonstrate in this tutorial.
 
+* You have web service or microservice endpoints that you wish to call and code for calling the services and using the data are in another project. This avoids duplicating code just as in the first point mentioned above.
 
+For this example we have a `build.sbt` at the root of the tutorial project. The project consists of one file in `src/main/scala` named `Args.scala`. Unlike `ArgsScript.scala` in the same directory which we ran earlier using `scala` on the command line, `Args.scala` can be in a `package` like normal code you write. We first need to build a publish this project to our local repository. You could also publish code to a public repository or to a local corporate repository. Make sure you are in the root of the project and run the following commands.
 
+```
+$ sbt
+[info] Loading global plugins from /Users/eric/.sbt/0.13/plugins
+[info] Updating {file:/Users/eric/.sbt/0.13/plugins/}global-plugins...
+[info] Resolving org.scala-sbt.ivy#ivy;2.3.0-sbt-48dd0744422128446aee9ac31aa356e[info] Resolving org.fusesource.jansi#jansi;1.4 ...
+[info] Done updating.
+[info] Loading project definition from /Users/eric/workspace/sbt-scripting/project
+[info] Updating {file:/Users/eric/workspace/sbt-scripting/project/}sbt-scripting-build...
+[info] Resolving org.scala-sbt.ivy#ivy;2.3.0-sbt-48dd0744422128446aee9ac31aa356e[info] Resolving org.fusesource.jansi#jansi;1.4 ...
+[info] Done updating.
+[info] Set current project to sbt scripting lib (in build file:/Users/eric/workspace/sbt-scripting/)
+>
+```
+```
+> publishLocal
+[info] Packaging /Users/eric/workspace/sbt-scripting/target/scala-2.12/sbt-scripting-lib_2.12-1.0-sources.jar ...
+[info] Done packaging.
+[info] Main Scala API documentation to /Users/eric/workspace/sbt-scripting/target/scala-2.12/api...
+[info] Wrote /Users/eric/workspace/sbt-scripting/target/scala-2.12/sbt-scripting-lib_2.12-1.0.pom
+[info] :: delivering :: org.example#sbt-scripting-lib_2.12;1.0 :: 1.0 :: release :: Wed Aug 23 14:51:21 EDT 2017
+[info] 'compiler-interface' not yet compiled for Scala 2.12.3. Compiling...
+[info] Compiling 2 Scala sources to /Users/eric/workspace/sbt-scripting/target/scala-2.12/classes...
+[info]   Compilation completed in 10.278 s
+model contains 5 documentable templates
+[warn] Multiple main classes detected.  Run 'show discoveredMainClasses' to see the list
+[info] Packaging /Users/eric/workspace/sbt-scripting/target/scala-2.12/sbt-scripting-lib_2.12-1.0.jar ...
+[info] Done packaging.
+[info] Main Scala API documentation successful.
+[info] Packaging /Users/eric/workspace/sbt-scripting/target/scala-2.12/sbt-scripting-lib_2.12-1.0-javadoc.jar ...
+[info] Done packaging.
+[info] 	published sbt-scripting-lib_2.12 to /Users/eric/.ivy2/local/org.example/sbt-scripting-lib_2.12/1.0/poms/sbt-scripting-lib_2.12.pom
+[info] 	published sbt-scripting-lib_2.12 to /Users/eric/.ivy2/local/org.example/sbt-scripting-lib_2.12/1.0/jars/sbt-scripting-lib_2.12.jar
+[info] 	published sbt-scripting-lib_2.12 to /Users/eric/.ivy2/local/org.example/sbt-scripting-lib_2.12/1.0/srcs/sbt-scripting-lib_2.12-sources.jar
+[info] 	published sbt-scripting-lib_2.12 to /Users/eric/.ivy2/local/org.example/sbt-scripting-lib_2.12/1.0/docs/sbt-scripting-lib_2.12-javadoc.jar
+[info] 	published ivy to /Users/eric/.ivy2/local/org.example/sbt-scripting-lib_2.12/1.0/ivys/ivy.xml
+[success] Total time: 12 s, completed Aug 23, 2017 2:58:26 PM
+>
+```
+One other thing in this [build.sbt](https://github.com/ekrich/sbt-scripting/blob/master/build.sbt) needs explaining. In **sbt** 1.0.x, `publishLocal` does not like to republish stable artifacts (non -SNAPSHOT) so you can get errors. Here we have added `isSnapshot in ThisBuild := true` to basically tell **sbt** to go ahead and overwrite our 1.0 version of *sbt-scripting-lib* if we publish local more than once. We have used the `in ThisBuild` version so you have an example that will work in multi-project builds if needed. Let's now go ahead and run the script. do the following first to exit sbt.
 
-Default logLevel in sbt is as follows: `logLevel in Global := Level.Warn`
+```
+> exit
+$ 
+```
+
+```
+$ ./bin/helloargsbt.sh "Eric R" foo bar baz
+Hello, Eric R!
+List(Eric R, foo, bar, baz)
+```
+
+The first time time you run it takes longer than subsequent runs. You can prepend `time` to the command above to see for your self. You will have to remove the cache to make it run for the "first" time again unless you change the script. You should see files like `~/.sbt/boot/4ae7d1a7a12e109852cc` in the `.sbt/boot` directory. You can safely remove the hash named directories and try and run again. Here is a link to the [helloargsbt.sh](https://github.com/ekrich/sbt-scripting/blob/master/bin/helloargsbt.sh) file you using. If you would like to see more of what is happening behind the scenes you can uncomment the following line in that script.
+
+```
+//logLevel in Global := Level.Debug
+```
+
+The default level is `Warn` but there is also `Info` and `Error` as described earlier for the command line option. These need to be with the first letter as a capital. **sbt** will see any changes to the script will reprocess the file so you can add code as you like to play around with the script.
+
+##### Using Amonnite Ops
+
+##### Using sbt 1.0.0
 
 
 ## References
@@ -166,7 +233,7 @@ Ammonite is an alternative to **sbt** scripting. My rationale for **sbt** script
 
 Scripting support was added with a relatively minor change. The script gets copied after stripping off the extension and adding `.scala` to the filename. This allows the extensions to vary but still ends up the same as before so the `.scala` file can be compiled. The first large step was to acually figuring out how to develop and debug **sbt** locally. The second was actually finding where and how to fix the problem and also understanding how things work enough to make the change.
 
-[Commit Details](https://github.com/sbt/sbt/commit/74510bc0a924c69008cb5ae01f43707c6373eb36).
+This link shows the [commit details](https://github.com/sbt/sbt/commit/74510bc0a924c69008cb5ae01f43707c6373eb36).
 
 
 
