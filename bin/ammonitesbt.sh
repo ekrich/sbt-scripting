@@ -6,7 +6,7 @@ version := "1.0"
 scalaVersion := "2.12.3"
 // uncomment to see what is going on
 //logLevel in Global := Level.Debug
-libraryDependencies += "com.lihaoyi" %% "ammonite-ops" % "1.0.0"
+libraryDependencies += "com.lihaoyi" %% "ammonite-ops" % "1.0.2"
 // adding these will make the script fail if using a deprecated method
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-Xfatal-warnings")
 */

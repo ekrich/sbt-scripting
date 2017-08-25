@@ -1,7 +1,7 @@
 # Scripting using sbt, a build tool for Scala
 ## Introduction
 
-The goal of this blog is to give a introduction to scripting on the Scala platform with an emphasis on **sbt** scripting. The examples are simple so the focus is on the mechanics and having all the code snippets you need so you can use them as a basis to create scripts for yourself or for your business.
+The goal of this tutorial is to give a introduction to scripting on the Scala platform with an emphasis on **sbt** scripting. The examples are simple so the focus is on the mechanics and having all the code snippets you need so you can use them as a basis to create scripts for yourself or for your business.
 
 I became interested in Scala so I decided to attend the Scala Days at Stanford University in 2011. The job I had at the time was using Enterprise Java and I knew there was little hope for using Scala there but I really liked the job and projects we were working on so I started to write more functional code in Java while learning Scala on the side. Eventually I moved to another job and started to use Scala for Gatling as nobody cares what you use for testing. I got introduced to [sbt](http://www.scala-sbt.org/) to build the testing code. I was really impressed with the tool so I bought **sbt in Action** and started the slow process of learning about **sbt**. I started to look at the product I was working on and all the scripting was in Unix *sh/bash* and we developed on Windows so to test anything with scripting meant you had to push your code to a server to run your code. I wrote scripts using Java in the past so I thought it would be great to write them in Scala. I looked as Scala scripting but being spoiled by dependency management in **sbt** lead me to **sbt** scripting. I also had run across [Ammonite Ops](http://ammonite.io/#Ammonite-Ops) since my mind was focused on shell scripting. I thought it would be nifty to add this dependency in a sbt script so I could use the library. The first thing I found was that scripting was not supported on Windows and in Linux your file needed to end in `.scala` rather than `.sh` or without an extension. Needless to say I was disappointed.
 
@@ -103,7 +103,7 @@ Now we will look at the script contents to understand the details.
 	* The first part is the native system command. `#!/usr/bin/env` tells the system to run the `/usr/bin/env` executable using the full path to the executable. The `env` executable will now run the `sbt` command with any arguments.
 	
 	* The **sbt** command. `sbt -Dsbt.version=0.13.15 -Dsbt.main.class=sbt.ScriptMain -error`
-In this case we pass the version and main class as `-D` properties and the `-error` argument so it is easier to see the errors. They are documented [here](http://www.scala-	sbt.org/1.0/docs/Command-Line-Reference.html). The `-error` is the log level and the other levels are `-warn`, `-info`, `-debug` discussed in this pull request on [GitHub](https://github.com/sbt/sbt/pull/2741) and this [commit](https://github.com/sbt/sbt/commit/9783ab176521a65eaa19b9013ea906a32c6f65b3).
+In this case we pass the version and main class as `-D` properties and the `-error` argument so it is easier to see the errors. They are documented [here](http://www.scala-sbt.org/1.0/docs/Command-Line-Reference.html). The `-error` is the log level and the other levels are `-warn`, `-info`, and `-debug`. See the [documention for log levels](http://www.scala-sbt.org/1.x/docs/Howto-Logging.html). Note: more information is discussed in this pull request on [GitHub](https://github.com/sbt/sbt/pull/2741) and this [commit](https://github.com/sbt/sbt/commit/9783ab176521a65eaa19b9013ea906a32c6f65b3) if you want to dive into the details.
 	
 	* The arguments that are passed on the command line to the script.
 `"Eric R" foo bar baz` are passed along to **sbt** and eventually to your embedded script which we will look at in number (3) below.
@@ -148,11 +148,11 @@ goto :eof
 
 The next example is meant to show how you might create the code you want to run in another project and then use it in a script by using a *libraryDependencies* setting in your **sbt** script file. A couple of reason you may want to do this are as follows:
 
-* Your script application targets both Unix and Windows platforms and you want your *sbt* to share the same code so you don't have to change code in multiple places. In this case you would still have change the *sbt* version, *scalaVersion* and/or your *libraryDependencies* in the build file. This is the case we demonstrate in this tutorial.
+* Your script application targets both Unix and Windows platforms and you want your *sbt* script to share the same code so you don't have to change code in multiple places. You would still have change the *sbt* version, *scalaVersion* and/or your *libraryDependencies* in the each build file when you upgrade. This is the case we demonstrate in this tutorial.
 
 * You have web service or microservice endpoints that you wish to call and code for calling the services and using the data are in another project. This avoids duplicating code just as in the first point mentioned above.
 
-For this example we have a `build.sbt` at the root of the tutorial project. The project consists of one file in `src/main/scala` named `Args.scala`. Unlike `ArgsScript.scala` in the same directory which we ran earlier using `scala` on the command line, `Args.scala` can be in a `package` like normal code you write. We first need to build a publish this project to our local repository. You could also publish code to a public repository or to a local corporate repository. Make sure you are in the root of the project and run the following commands.
+For this example we have a `build.sbt` at the root of the tutorial project. The project consists of one file in `src/main/scala` named `Args.scala`. Unlike `ArgsScript.scala` in the same directory which we ran earlier using `scala` on the command line, `Args.scala` can be in a `package` like normal code you write. We first need to build and publish this project to our local repository. You could also publish code to a public repository or to a local corporate repository. Make sure you are in the root of the project and run the following commands.
 
 ```
 $ sbt
@@ -192,7 +192,7 @@ model contains 5 documentable templates
 [success] Total time: 12 s, completed Aug 23, 2017 2:58:26 PM
 >
 ```
-One other thing in this [build.sbt](https://github.com/ekrich/sbt-scripting/blob/master/build.sbt) needs explaining. In **sbt** 1.0.x, `publishLocal` does not like to republish stable artifacts (non -SNAPSHOT) so you can get errors. Here we have added `isSnapshot in ThisBuild := true` to basically tell **sbt** to go ahead and overwrite our 1.0 version of *sbt-scripting-lib* if we publish local more than once. We have used the `in ThisBuild` version so you have an example that will work in multi-project builds if needed. Let's now go ahead and run the script. do the following first to exit sbt.
+One other thing in this [build.sbt](https://github.com/ekrich/sbt-scripting/blob/master/build.sbt) needs explaining. In **sbt** 1.0.x, `publishLocal` does not like to republish stable artifacts (non -SNAPSHOT) so you can get errors. Here we have added `isSnapshot in ThisBuild := true` to tell **sbt** to go ahead and overwrite our 1.0 version of *sbt-scripting-lib* if we publish local more than once. We have used the `in ThisBuild` scope so you have an example that will work in multi-project builds if needed. It is not needed here as this is a simple build. Let's now go ahead and run the script. Do the following first to exit sbt.
 
 ```
 > exit
@@ -205,26 +205,62 @@ Hello, Eric R!
 List(Eric R, foo, bar, baz)
 ```
 
-The first time time you run it takes longer than subsequent runs. You can prepend `time` to the command above to see for your self. You will have to remove the cache to make it run for the "first" time again unless you change the script. You should see files like `~/.sbt/boot/4ae7d1a7a12e109852cc` in the `.sbt/boot` directory. You can safely remove the hash named directories and try and run again. Here is a link to the [helloargsbt.sh](https://github.com/ekrich/sbt-scripting/blob/master/bin/helloargsbt.sh) file you using. If you would like to see more of what is happening behind the scenes you can uncomment the following line in that script.
+The first time time you run it takes longer than subsequent runs. You can prepend `time` to the command above to see for your self. You will have to remove the cache to make it run for the "first" time again unless you change the script. You should see files like `~/.sbt/boot/4ae7d1a7a12e109852cc` in the `.sbt/boot` directory. You can safely remove the hash named directories and try and run again. Here is a link to the [helloargsbt.sh](https://github.com/ekrich/sbt-scripting/blob/master/bin/helloargsbt.sh) file you are using. Change the extension from `.sh` to `.bat` to look at the Windows version. All the file names are alike so anytime a `.sh` file is mentioned you can change the extension to see the Windows version. If you would like to see more of what is happening behind the scenes you can uncomment the following line in that script.
 
 ```
 //logLevel in Global := Level.Debug
 ```
 
-The default level is `Warn` but there is also `Info` and `Error` as described earlier for the command line option. These need to be with the first letter as a capital. **sbt** will see any changes to the script will reprocess the file so you can add code as you like to play around with the script.
+The default level is `Warn` for scripting but there is also `Info` and `Error` as described earlier for the command line option. These need to have the first letter capitalized unlike the command line options shown earlier. **sbt** will see any changes to the script and reprocess the script file so you can add code as you like to experiment with the script.
 
-##### Using Amonnite Ops
+Note: code that shows the [default setting](https://github.com/sbt/sbt/blob/2d7ec47b13e02526174f897cca0aef585bd7b128/main/src/main/scala/sbt/internal/Script.scala#L52).
+
+##### Using Ammonite Ops
+[Ammonite Ops](http://ammonite.io/#Ammonite-Ops) is a Scala library that is titled as *"A Rock-solid Filesystem Library for Scala"*. The author [Li Haoyi](http://www.lihaoyi.com/) is very accomplished. As mentioned in the Introduction, this library was part of the inspiration for looking into **sbt** scripting in the first place because the format looks very much like shell scripting but using Scala.
+
+We can run the code as follows which lists your current working directory.
+
+```
+$ ./bin/ammonitesbt.sh "Eric R" foo bar baz
+Using AmmoniteOps to list the current directory
+LsSeq(file1, file2, ... , fileN) 
+```
+
+This file, [ammonitesbt.sh](https://github.com/ekrich/sbt-scripting/blob/master/bin/ammonitesbt.sh), has some comments you can follow for more information about deprecation. In general, it is probably easier to create a script in you normal development environment and then paste the code in the script when you are happy with the result. You can also use the technique above to create you code in a library and then run the result in you script. In the same way you use Ammonite Ops in a script you can add a dependency to the build portion of the script to pull in more libraries.
 
 ##### Using sbt 1.0.0
+
+The last example is using **sbt** 1.0 which has been recently released as of August 10th, 2017. Because there is a small bug in the shell handling at least in Unix we need to download Paul Phillips' [sbt-extras](https://github.com/paulp/sbt-extras) launcher. I have changed the download call slightly to renamed `sbt` to `xsbt` so that there isn't a name collision. If you are on Windows you can skip the "install" and go ahead and try and run the script. There may not be a problem using the command shell on Windows. For Unix systems, run the following command.
+
+```
+curl -Ls https://git.io/sbt > ~/bin/xsbt && chmod 0755 ~/bin/xsbt
+```
+
+This assumes you have a **PATH** to your home `~/bin` directory to run the script. Do the following to add it to your path for this session. You can add it permanently in your `.profile` or `.bash_profile` or wherever you configure your path.
+
+```
+export PATH=${PATH}:~/bin
+```
+Now that we have this setup we can run the [helloargsbt-1-0-0.sh](https://github.com/ekrich/sbt-scripting/blob/master/bin/helloargsbt-1-0-0.sh) on **sbt** 1.0 by running the following command.
+
+```
+$ ./bin/helloargsbt-1-0-0.sh "Eric R" foo bar baz
+[info] Set current project to sbt-test (in build file:/Users/eric/.sbt/boot/4dccf022e080e5273a0f/)
+Hello, Eric R!
+Args: List(Eric R, foo, bar, baz)
+```
+##Summary
+We have now concluded the tutorial. Hopefully you can use this code as a starting point for your next **sbt** scripting project. The references contain some more information on Ammonite and a nice Gist example. There is also a pointer to the code that was changed to make "Native Script" files work for **sbt** scripts.
+
 
 
 ## References
 1. Blog about sbt scripting. [http://eed3si9n.com/scripting-with-scala](http://eed3si9n.com/scripting-with-scala) 
 2. Gist example. [https://gist.github.com/SethTisue/3a5a04e5054fc5b75011](https://gist.github.com/SethTisue/3a5a04e5054fc5b75011)
 
-## Appendix 1: Ammonite
+## Appendix 1: Ammonite Scala Scripts
 
-Ammonite is an alternative to **sbt** scripting. My rationale for **sbt** scripting is that most people are using **sbt** already and it needs to be installed to do development. It also will download the needed Scala version so you only need Java installed. I prefer having as few tools as possible but Ammonite is a great tool so try it out if you wish.
+Ammonite [Scala Scripts](http://ammonite.io/#ScalaScripts) are an alternative to **sbt** scripting. My rationale for **sbt** scripting is that most people are using **sbt** already and it needs to be installed to do development. It also will download the needed Scala version so you only need Java installed. I prefer having as few tools as possible but Ammonite is a great tool so try it out if you wish.
 
 1. Ammonite web site. [http://ammonite.io/](http://ammonite.io/)
 2. Ammonite code on GitHub. [https://github.com/lihaoyi/Ammonite](https://github.com/lihaoyi/Ammonite)
