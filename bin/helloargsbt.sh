@@ -1,4 +1,4 @@
-#!/usr/bin/env sbt -Dsbt.version=0.13.15 -Dsbt.main.class=sbt.ScriptMain -error
+#!/usr/bin/env sbt -Dsbt.version=0.13.16 -Dsbt.main.class=sbt.ScriptMain -error
 
 /***
 name := """sbt-script-app"""
