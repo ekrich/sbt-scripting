@@ -1,8 +1,4 @@
-::#!
-@echo off
-call sbt -Dsbt.version=1.0.0 -Dsbt.main.class=sbt.ScriptMain -error %~nx0 %*
-goto :eof
-::!#
+#!/usr/bin/env xsbt -Dsbt.version=1.0.1 -Dsbt.main.class=sbt.ScriptMain -error
 
 /***
 name := """sbt-test"""

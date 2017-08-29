@@ -3,7 +3,7 @@
 
 The goal of this tutorial is to provide an introduction to scripting on the Scala platform with an emphasis on **sbt** scripting. The examples are simple so the focus is on the mechanics and having all the code snippets you need so you can use them as a basis to create scripts for yourself or for your business.
 
-I became interested in Scala so I decided to attend the Scala Days at Stanford University in 2011. The job I had at the time was using Enterprise Java and I knew there was little hope for using Scala there but I really liked the job and projects. I started to write more functional code in Java while learning Scala on the side. Eventually I moved to another job and started to use Scala for Gatling (load testing) rather than Apache JMeter. I got introduced to [sbt](http://www.scala-sbt.org/) to build the testing code. I was really impressed with the **sbt** so I bought **sbt in Action** and started the slow process of learning about **sbt**. 
+I became interested in Scala so I decided to attend the Scala Days at Stanford University in 2011. The job I had at the time was using Enterprise Java and I knew there was little hope for using Scala but I really liked the job and projects. I started to write more functional code in Java while learning Scala on the side. Eventually I moved to another job and started to use Scala for Gatling (load testing) rather than Apache JMeter. I got introduced to [sbt](http://www.scala-sbt.org/) to build the testing code. I was really impressed with the **sbt** so I bought **sbt in Action** and started the slow process of learning about **sbt**. 
 
 I was working on our product and all the scripting was in Unix *sh/bash* and we developed on Windows so to test anything with scripting meant you had to push your code to a server to run your code. I wrote scripts using Java in the past so I thought it would be great to write them in Scala. I looked as Scala scripting but being spoiled by dependency management in **sbt** lead me to **sbt** scripting. I also had run across [Ammonite Ops](http://ammonite.io/#Ammonite-Ops) since my mind was focused on shell scripting. I thought it would be nifty to add this dependency in a sbt script so I could use the library. The first thing I found was that scripting was not supported on Windows and in Linux your file needed to end in `.scala` rather than `.sh` or without an extension. Needless to say I was disappointed.
 
@@ -30,7 +30,7 @@ project/
 README.md
 src/
 ```
-If you are already familiar with Scala scripting or just want to find out about *sbt* scripting you can skip the next section. You can always refer back here if you desire.
+If you are already familiar with Scala scripting or just want to find out about **sbt** scripting you can skip the next section. You can always refer back here if you desire.
 
 ### Scala Scripting
 
@@ -59,7 +59,7 @@ exec scala "$0" "$@"
 !#
 object HelloWorld {
   def main(args: Array[String]): Unit = {
-  	println("Hello, " + args.headOption.getOrElse("World") + "!")
+    println("Hello, " + args.headOption.getOrElse("World") + "!")
     println("Args: " + args.toList)
   }
 }
@@ -92,11 +92,11 @@ Scala Scripts allow much of the same functionality as **sbt** scripts but you do
 
 ### Prerequisite for sbt Scripts
 
-The first thing you should do is download and install the latest **sbt** `1.0.x` using the following link. [http://www.scala-sbt.org/download.html](http://www.scala-sbt.org/download.html). The tutorial uses **sbt** versions `0.13.16` and `1.0.0` and the latest launcher is designed to support the newer and older versions. You do not need Scala installed for **sbt** scripts.
+The first thing you should do is download and install the latest **sbt** `1.0.x` using the following link. [http://www.scala-sbt.org/download.html](http://www.scala-sbt.org/download.html). The tutorial uses **sbt** versions `0.13.16` and `1.0.1` and the latest launcher is designed to support the newer and older versions. You do not need Scala installed for **sbt** scripts.
 
 ### Basics of sbt scripts
 
-We will first look at the structure and parts of a **sbt** script. The first part of the script is the part that tells the native operating system what to execute. We will first show the Unix version but the structure is the same for Windows scripts. We will first look at the file [hellosbt.sh](https://github.com/ekrich/sbt-scripting/blob/master/bin/hellosbt.sh). You can change the extension from `.sh` to `.bat` to look at the Windows version. All the file names are alike so anytime a `.sh` file is mentioned you can change the extension to see the Windows version. In the root of the project you can execute the following command with your own arguments as desired.
+We will first look at the structure and parts of a **sbt** script. The first part of the script is the part that tells the native operating system what to execute. We will first show the Unix version but the structure is the same for Windows scripts. We will first look at the file [hellosbt.sh](https://github.com/ekrich/sbt-scripting/blob/master/bin/hellosbt.sh). You can change the extension from `.sh` to `.bat` to look at the Windows version. All the file names are alike so anytime a `.sh` file is mentioned you can change the extension to `.bat` to see or run the Windows version. Run in Windows as follows: `bin\hellosbt.bat`. In the root of the project you can execute the following command with your own arguments as desired.
 
 ```
 $ ./bin/hellosbt.sh "Eric R" foo bar baz
@@ -240,7 +240,7 @@ This file, [ammonitesbt.sh](https://github.com/ekrich/sbt-scripting/blob/master/
 
 ##### Using sbt 1.0.0
 
-The last example is using **sbt** 1.0 which has been recently released as of August 10th, 2017. Because there is a [small bug]() in the shell handling in Unix we need to download Paul Phillips' [sbt-extras](https://github.com/paulp/sbt-extras) launcher. I have changed the download call slightly to rename `sbt` to `xsbt` so that there isn't a name collision. If you are on Windows you can skip the "install" and go ahead and try and run the script. There may not be a problem using the command shell on Windows. For Unix systems, run the following command.
+The last example is using **sbt** 1.0 which has been recently released as of August 10th, 2017. Because there is a [small bug]() in the shell handling in Unix we need to download Paul Phillips' [sbt-extras](https://github.com/paulp/sbt-extras) launcher. I have changed the download call slightly to rename `sbt` to `xsbt` so that there isn't a name collision with your current **sbt** launcher. If you are on Windows you can skip the "install" and go ahead and try and run the script. There may not be a problem using the command shell on Windows. For Unix systems, run the following command.
 
 ```
 curl -Ls https://git.io/sbt > ~/bin/xsbt && chmod 0755 ~/bin/xsbt
@@ -251,10 +251,10 @@ This assumes you have a **PATH** to your home `~/bin` directory to run the scrip
 ```
 export PATH=${PATH}:~/bin
 ```
-Now that we have this setup we can run the [helloargsbt-1-0-0.sh](https://github.com/ekrich/sbt-scripting/blob/master/bin/helloargsbt-1-0-0.sh) on **sbt** 1.0 by running the following command. Inside the script it calls `xsbt` so it uses the launcher we just setup. Once **sbt** is fixed you can change that back to `sbt` if desired.
+Now that we have this setup we can run the [helloargsbt-1-0.sh](https://github.com/ekrich/sbt-scripting/blob/master/bin/helloargsbt-1-0.sh) on **sbt** 1.0 by running the following command. Inside the script it calls `xsbt` so it uses the launcher we just setup. Once **sbt** is fixed you can change that back to `sbt` if desired.
 
 ```
-$ ./bin/helloargsbt-1-0-0.sh "Eric R" foo bar baz
+$ ./bin/helloargsbt-1-0.sh "Eric R" foo bar baz
 [info] Set current project to sbt-test (in build file:/Users/eric/.sbt/boot/4dccf022e080e5273a0f/)
 Hello, Eric R!
 Args: List(Eric R, foo, bar, baz)
@@ -270,14 +270,14 @@ We have now concluded the tutorial. Hopefully you can use this code as a startin
 
 ## Appendix 1: Ammonite Scala Scripts
 
-Ammonite [Scala Scripts](http://ammonite.io/#ScalaScripts) are an alternative to **sbt** scripting. My rationale for **sbt** scripting is that most people are using **sbt** already and it needs to be installed to do development. It also will download the needed Scala version so you only need Java installed. I prefer having as few tools as possible but Ammonite is a great tool so try it out if you wish.
+Ammonite [Scala Scripts](http://ammonite.io/#ScalaScripts) are an alternative to **sbt** scripting but requires installing Ammonite. My rationale for **sbt** scripting is that most people are using **sbt** already and it needs to be installed to do development. It also will download the needed Scala version so you only need Java installed. I prefer having as few tools as possible but Ammonite is a great tool so try it out if you wish.
 
 1. Ammonite web site. [http://ammonite.io/](http://ammonite.io/)
 2. Ammonite code on GitHub. [https://github.com/lihaoyi/Ammonite](https://github.com/lihaoyi/Ammonite)
 
 ## Appendix 2: Script support code details
 
-Scripting support was added with a relatively minor change. The script gets copied after stripping off the extension and adding `.scala` to the filename. This allows the extensions to vary but still ends up the same as before so the `.scala` file can be compiled. The first large step was to acually figuring out how to develop and debug **sbt** locally. The second was actually finding where and how to fix the problem and also understanding how things work enough to make the change.
+Scripting support was added with a relatively minor change. The script gets copied after stripping off the extension and adding `.scala` to the filename. This allows the extensions to vary but still ends up the same as before so the `.scala` file can be compiled. The first large step was to actually figuring out how to develop and debug **sbt** locally. The second was actually finding where and how to fix the problem and also understanding how things work well enough to make the change.
 
 This link shows the [commit details](https://github.com/sbt/sbt/commit/74510bc0a924c69008cb5ae01f43707c6373eb36).
 
