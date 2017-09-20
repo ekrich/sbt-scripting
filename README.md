@@ -240,18 +240,9 @@ This file, [ammonitesbt.sh](https://github.com/ekrich/sbt-scripting/blob/master/
 
 ##### Using sbt 1.0.0
 
-The last example is using **sbt** 1.0 which has been recently released as of August 10th, 2017. Because there is a [small bug]() in the shell handling in Unix we need to download Paul Phillips' [sbt-extras](https://github.com/paulp/sbt-extras) launcher. I have changed the download call slightly to rename `sbt` to `xsbt` so that there isn't a name collision with your current **sbt** launcher. If you are on Windows you can skip the "install" and go ahead and try and run the script. There may not be a problem using the command shell on Windows. For Unix systems, run the following command.
+The last example is using **sbt** 1.0.0 which has been recently released as of August 10th, 2017. There was a small bug in the shell handling in Unix which was fixed in 1.0.2.
 
-```
-curl -Ls https://git.io/sbt > ~/bin/xsbt && chmod 0755 ~/bin/xsbt
-```
-
-This assumes you have a **PATH** to your home `~/bin` directory to run the script. Do the following to add it to your path for this session. You can add it permanently in your `.profile` or `.bash_profile` or wherever you configure your path.
-
-```
-export PATH=${PATH}:~/bin
-```
-Now that we have this setup we can run the [helloargsbt-1-0.sh](https://github.com/ekrich/sbt-scripting/blob/master/bin/helloargsbt-1-0.sh) on **sbt** 1.0 by running the following command. Inside the script it calls `xsbt` so it uses the launcher we just setup. Once **sbt** is fixed you can change that back to `sbt` if desired.
+Inside the script we use version 1.0.2. We can run the [helloargsbt-1-0.sh](https://github.com/ekrich/sbt-scripting/blob/master/bin/helloargsbt-1-0.sh) with **sbt** 1.0 by running the following command. 
 
 ```
 $ ./bin/helloargsbt-1-0.sh "Eric R" foo bar baz
@@ -259,7 +250,11 @@ $ ./bin/helloargsbt-1-0.sh "Eric R" foo bar baz
 Hello, Eric R!
 Args: List(Eric R, foo, bar, baz)
 ```
+
+**sbt** 1.0 is the suggested release to use for all new projects. Some plugins are not yet ported to 1.0 but give it a try first. Let the authors know and help port plugins if you know how to help. At this time, most of the popular plugins have been ported.
+
 ##Summary
+
 We have now concluded the tutorial. Hopefully you can use this code as a starting point for your next **sbt** scripting project. The references contain some more information on Ammonite and a nice Gist example. There is also a pointer to the code that was changed to make "Native Script" files work for **sbt** scripts.
 
 

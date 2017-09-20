@@ -1,4 +1,4 @@
-#!/usr/bin/env xsbt -Dsbt.version=1.0.1 -Dsbt.main.class=sbt.ScriptMain -error
+#!/usr/bin/env sbt -Dsbt.version=1.0.2 -Dsbt.main.class=sbt.ScriptMain -error
 
 /***
 name := """sbt-test"""
