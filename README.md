@@ -251,7 +251,7 @@ Hello, Eric R!
 Args: List(Eric R, foo, bar, baz)
 ```
 
-**sbt** 1.0 is the suggested release to use for all new projects. Some plugins are not yet ported to 1.0 but give it a try first. Let the authors know and help port plugins if you know how to help. At this time, most of the popular plugins have been ported.
+**sbt** 1.0 is the suggested release to use for all new projects. Some plugins are not yet ported to 1.0 but give it a try first. Let the authors know and help port plugins if you know how to help. At this time, most of the popular plugins have been [ported](https://github.com/sbt/sbt/wiki/sbt-1.x-plugin-migration). 
 
 ## Summary
 
