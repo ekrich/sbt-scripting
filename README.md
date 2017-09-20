@@ -253,7 +253,7 @@ Args: List(Eric R, foo, bar, baz)
 
 **sbt** 1.0 is the suggested release to use for all new projects. Some plugins are not yet ported to 1.0 but give it a try first. Let the authors know and help port plugins if you know how to help. At this time, most of the popular plugins have been ported.
 
-##Summary
+## Summary
 
 We have now concluded the tutorial. Hopefully you can use this code as a starting point for your next **sbt** scripting project. The references contain some more information on Ammonite and a nice Gist example. There is also a pointer to the code that was changed to make "Native Script" files work for **sbt** scripts.
 
