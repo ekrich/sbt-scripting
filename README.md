@@ -5,7 +5,7 @@ The goal of this tutorial is to provide an introduction to scripting on the Scal
 
 I became interested in Scala so I decided to attend the Scala Days at Stanford University in 2011. The job I had at the time was using Enterprise Java and I knew there was little hope for using Scala but I really liked the job and projects. I started to write more functional code in Java while learning Scala on the side. Eventually I moved to another job and started to use Scala for Gatling (load testing) rather than Apache JMeter. I got introduced to [sbt](http://www.scala-sbt.org/) to build the testing code. I was really impressed with the **sbt** so I bought **sbt in Action** and started the slow process of learning about **sbt**. 
 
-I was working on our product and all the scripting was in Unix *sh/bash* and we developed on Windows so to test anything with scripting meant you had to push your code to a server to run your code. I wrote scripts using Java in the past so I thought it would be great to write them in Scala. I looked as Scala scripting but being spoiled by dependency management in **sbt** lead me to **sbt** scripting. I also had run across [Ammonite Ops](http://ammonite.io/#Ammonite-Ops) since my mind was focused on shell scripting. I thought it would be nifty to add this dependency in a sbt script so I could use the library. The first thing I found was that scripting was not supported on Windows and in Linux your file needed to end in `.scala` rather than `.sh` or without an extension. Needless to say I was disappointed.
+I was working on our product and all the scripting was in Unix *sh/bash* and we developed on Windows so to test anything with scripting meant you had to push your code to a server to run your code. I wrote scripts using Java in the past so I thought it would be great to write them in Scala. I looked at Scala scripting but being spoiled by dependency management in **sbt** lead me to **sbt** scripting. I also had run across [Ammonite Ops](http://ammonite.io/#Ammonite-Ops) since my mind was focused on shell scripting. I thought it would be nifty to add this dependency in a sbt script so I could use the library. The first thing I found was that scripting was not supported on Windows and in Linux your file needed to end in `.scala` rather than `.sh` or without an extension. Needless to say I was disappointed.
 
 Since I never had contributed to Open Source, was a novice with Git and GitHub, and intermediate level in Scala, why not contribute to **sbt**? What could go wrong? Actually, both [Eugene Yokota](https://github.com/eed3si9n) and [Dale Wijnand](https://github.com/dwijnand) were super helpful and I was able to get everything running and debugging locally and I did my first Pull Request (PR) before Scala Days 2016 in New York last year. Eugene was kind enough to help me get my PR ready for merging at the conference. Shortly after the conference support for **sbt** scripting for Windows was supported using `.bat` or `.cmd` files and Unix/Linux added support for `.sh` or no extension as well as any other extension. See the release notes for **sbt** [v0.13.12](https://github.com/sbt/sbt/releases/v0.13.12). During this development I found that quoted arguments were not passed correctly to scripts but the developers wanted this to be a separate issue so they could keep track of it in GitHub. This would have to wait for another PR. I also contributed this fix which was released in April 2017 in **sbt** [v0.13.15](https://github.com/sbt/sbt/releases/tag/v0.13.15). This made **sbt** scripting fully functional.
 
@@ -82,7 +82,7 @@ goto :eof
 ::!#
 object HelloWorld {
   def main(args: Array[String]): Unit = {
-  	println("Hello, " + args.headOption.getOrElse("World") + "!")
+    println("Hello, " + args.headOption.getOrElse("World") + "!")
     println("Args: " + args.toList)
   }
 }
@@ -96,7 +96,7 @@ The first thing you should do is download and install the latest **sbt** `1.0.x`
 
 ### Basics of sbt scripts
 
-We will first look at the structure and parts of a **sbt** script. The first part of the script is the part that tells the native operating system what to execute. We will first show the Unix version but the structure is the same for Windows scripts. We will first look at the file [hellosbt.sh](https://github.com/ekrich/sbt-scripting/blob/master/bin/hellosbt.sh). You can change the extension from `.sh` to `.bat` to look at the Windows version. All the file names are alike so anytime a `.sh` file is mentioned you can change the extension to `.bat` to see or run the Windows version. Run in Windows as follows: `bin\hellosbt.bat`. In the root of the project you can execute the following command with your own arguments as desired.
+We will first look at the structure and parts of a **sbt** script. The first part of the script is the part that tells the native operating system what to execute. We will first show the Unix version but the structure is the same for Windows scripts. Now we can look at the file [hellosbt.sh](https://github.com/ekrich/sbt-scripting/blob/master/bin/hellosbt.sh). You can change the extension in the URL from `.sh` to `.bat` to look at the Windows version. All the file names are alike so anytime a `.sh` file is mentioned you can change the extension to `.bat` to see or run the Windows version. Run in Windows as follows: `bin\hellosbt.bat`. In the root of the project you can execute the following command with your own arguments as desired.
 
 ```
 $ ./bin/hellosbt.sh "Eric R" foo bar baz
@@ -158,7 +158,7 @@ goto :eof
 
 The next example is meant to show how you might create the code you want to run in another project and then use it in a script by using a *libraryDependencies* setting in your **sbt** script file. A couple of reason you may want to do this are as follows:
 
-* Your script application targets both Unix and Windows platforms and you want your **sbt** script to share the same code so you don't have to change code in multiple places. You would still have change the **sbt** version, *scalaVersion* and/or your *libraryDependencies* in the each build file when you upgrade. This is the case we demonstrate in this tutorial.
+* Your script application targets both Unix and Windows platforms and you want your **sbt** script to share the same code so you don't have to change code in multiple places. You would still have to change the **sbt** version, *scalaVersion* and/or your *libraryDependencies* in the each build file when you upgrade. This is the case we demonstrate in this tutorial.
 
 * You have web service or microservice endpoints that you wish to call and code for calling the services and using the data are in another project. This avoids duplicating code just as in the first point mentioned above.
 
